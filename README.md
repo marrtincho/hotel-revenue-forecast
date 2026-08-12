@@ -1,5 +1,7 @@
 # Hotel Revenue Forecasting
 
+[![Pipeline](https://github.com/marrtincho/hotel-revenue-forecast/actions/workflows/ci.yml/badge.svg)](https://github.com/marrtincho/hotel-revenue-forecast/actions/workflows/ci.yml)
+
 Forecasting final occupancy by room type at 30, 60 and 90 days before arrival,
 using pickup methodology and gradient boosting.
 
@@ -11,6 +13,8 @@ with any confidence.
 This project builds that forecast end to end: raw property management system
 exports in, per-room-type occupancy forecasts out, with a Streamlit interface
 for the people who actually make pricing decisions.
+
+![Streamlit forecast view](docs/assets/app_screenshot.png)
 
 ---
 
