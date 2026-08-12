@@ -1,0 +1,131 @@
+# =============================================================================
+# Hotel Revenue Forecast — Configuration
+# =============================================================================
+# All hotel-identifying values live here. The pipeline reads everything from
+# this file, so the same codebase can be pointed at a different property by
+# editing this config alone — no code changes required.
+#
+# NOTE: The values below describe a FICTIONAL property used for the public
+# demo. See docs/SYNTHETIC_DATA.md for details.
+# =============================================================================
+
+hotel:
+  code: "GMH"
+  name: "Grand Meridian Hotel"
+  city: "Northport"
+  country: "Atlantis"
+  timezone: "Europe/Lisbon"
+  currency: "EUR"
+
+# -----------------------------------------------------------------------------
+# Room inventory
+# -----------------------------------------------------------------------------
+# Fixed physical inventory. Occupancy percentages are computed against these
+# capacities. Total: 186 rooms.
+# -----------------------------------------------------------------------------
+inventory:
+  Classic: 12
+  Comfort: 98
+  Terrace: 44
+  Family Plus: 14
+  Executive: 11
+  Executive Family: 5
+  Penthouse: 2
+
+# -----------------------------------------------------------------------------
+# Modelling strategy per room type
+# -----------------------------------------------------------------------------
+# Room types differ enormously in volume and volatility. Large types have
+# enough signal for a gradient boosting model; small types are better served
+# by a robust median-pickup baseline. See docs/METHODOLOGY.md.
+# -----------------------------------------------------------------------------
+strategy:
+  use_model:      ["Comfort", "Classic"]
+  use_baseline:   ["Terrace", "Family Plus", "Executive", "Executive Family"]
+  use_otb_only:   ["Penthouse"]
+
+# -----------------------------------------------------------------------------
+# Forecast horizons (days before arrival)
+# -----------------------------------------------------------------------------
+horizons: [30, 60, 90]
+
+# -----------------------------------------------------------------------------
+# Model hyperparameters
+# -----------------------------------------------------------------------------
+model:
+  n_estimators: 1000
+  learning_rate: 0.02
+  num_leaves: 31
+  min_child_samples: 15
+  subsample: 0.8
+  colsample_bytree: 0.8
+  reg_alpha: 0.1
+  reg_lambda: 0.5
+  random_state: 42
+  early_stopping_rounds: 60
+  internal_val_fraction: 0.15
+
+# -----------------------------------------------------------------------------
+# Reservation status codes considered "on the books"
+# -----------------------------------------------------------------------------
+otb_statuses: ["Reserved", "InHouse"]
+
+# -----------------------------------------------------------------------------
+# Local demand calendar
+# -----------------------------------------------------------------------------
+# Recurring events that shift demand. Impact is a coarse ordinal signal the
+# model consumes as a feature: none < low < medium < high.
+# Format: [month, day_start, day_end, name, impact]
+# -----------------------------------------------------------------------------
+events:
+  - [1,   2,  5,  "Winter Light Festival",        "medium"]
+  - [1,  20, 21,  "Founders Day",                 "high"]
+  - [3,   5, 18,  "Spring Carnival",              "high"]
+  - [4,  10, 17,  "Easter Week",                  "high"]
+  - [5,  15, 15,  "City Patron Day",              "medium"]
+  - [6,  20, 30,  "Harbour Summer Fair",          "medium"]
+  - [7,   1, 31,  "Harbour Summer Fair",          "medium"]
+  - [8,   5, 10,  "Coastal Music Festival",       "high"]
+  - [8,  14, 19,  "Old Town Fair",                "medium"]
+  - [8,  25, 25,  "Harvest Street Party",         "medium"]
+  - [9,   6,  7,  "Regional Heritage Days",       "medium"]
+  - [9,  28, 30,  "International Design Expo",    "high"]
+  - [10,  1,  3,  "International Design Expo",    "high"]
+  - [10,  8,  8,  "Regional Holiday",             "medium"]
+  - [10, 24, 24,  "Northport Half Marathon",      "high"]
+  - [11,  8, 10,  "Food & Wine Week",             "medium"]
+  - [11, 13, 15,  "Motorsport Grand Prix",        "high"]
+  - [12,  1,  1,  "Northport Marathon",           "high"]
+  - [12,  4,  7,  "Auto Show",                    "medium"]
+  - [12, 27, 31,  "Winter Light Festival",        "medium"]
+
+# -----------------------------------------------------------------------------
+# Public holidays
+# -----------------------------------------------------------------------------
+holidays_national:
+  - [1, 1]
+  - [1, 6]
+  - [5, 1]
+  - [8, 15]
+  - [10, 12]
+  - [11, 1]
+  - [12, 6]
+  - [12, 8]
+  - [12, 25]
+
+holidays_regional:
+  - [3, 17]
+  - [4, 26]
+  - [10, 8]
+
+# High season months (used as a coarse feature)
+peak_months: [6, 7, 8, 9]
+
+# -----------------------------------------------------------------------------
+# Paths (relative to project root)
+# -----------------------------------------------------------------------------
+paths:
+  raw_pms:        "data/raw/pms_exports"
+  features:       "data/processed/pickup_features.csv"
+  output:         "data/output"
+  models:         "data/models"

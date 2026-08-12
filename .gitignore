@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Generated artefacts — reproducible via the generator, not tracked
+data/raw/pms_exports/*.csv
+data/processed/*.csv
+data/output/*.csv
+data/models/*.joblib
+
+.ipynb_checkpoints/
+.DS_Store
+.idea/
+.vscode/
