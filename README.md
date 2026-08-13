@@ -127,7 +127,7 @@ necessary for accuracy.
 ## Running it
 
 ```bash
-git clone https://github.com/<your-username>/hotel-revenue-forecast.git
+git clone https://github.com/marrtincho/hotel-revenue-forecast.git
 cd hotel-revenue-forecast
 
 python -m venv .venv && source .venv/bin/activate
